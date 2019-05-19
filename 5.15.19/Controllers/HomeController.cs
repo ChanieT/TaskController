@@ -5,39 +5,42 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using _5._15._19.Models;
+using Microsoft.Extensions.Configuration;
+using Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace _5._15._19.Controllers
 {
     public class HomeController : Controller
     {
+        private string _conn;
+        public HomeController(IConfiguration configuration)
+        {
+            _conn = configuration.GetConnectionString("ConStr");
+        }
+
+        [Authorize]
         public IActionResult Index()
         {
-            return View();
-        }
+            //if (User.Identity.IsAuthenticated)
+            //{
+            //    var repo = new TasksRepository(_conn);
+            //    User user = repo.GetUserByEmail(User.Identity.Name);
+            //    var vm = new IndexVM
+            //    {
+            //        Assignments = repo.GetAssignments(),
+            //        UserId=user.Id
+            //    };
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+            //    return View(vm);
+            //}
+            //else
+            //{
+            //    return Redirect("/account/login");
+            //}
+            var repo = new TasksRepository(_conn);
+            
+            return View(repo.GetIncompletedAssignments());
+        }      
     }
 }
