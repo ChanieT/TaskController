@@ -12,7 +12,8 @@
     });
 
     connection.on("NewTask", a => {
-        $("#table").append(`<tr id="task-${a.id}"><td>${a.task}</td><td><button class="btn-success accept" data-task-id="${a.Id}">I'll take this one</button></td></tr>`)
+        $("#table").append(`<tr id="task-${a.id}"><td>${a.task}</td><td><button class="btn-success accept" data-task-id="${a.id}">I'll take this one</button></td></tr>`)
+      
     });
 
     $("#table").on('click', '.accept', function () {
@@ -27,12 +28,12 @@
     });
 
     connection.on("AssignmentGotAccepted", assignment => {
-        //console.log(assignment.User.Name);
+        console.log(assignment.user.name);
         $(`#task-${assignment.id}`).find('td:eq(1)').html(`<td><button class="btn-warning" disabled>${assignment.user.name} is doing this</button></td>`);
     });
 
     connection.on("IAcceptedAssignment", assignment => {
-        //console.log("hello");
+        console.log("hello");
         $(`#task-${assignment.id}`).find('td:eq(1)').html(`<td><button class="btn-warning done" data-task-id="${assignment.Id}">I'm done!</button></td>`);
     });
 
